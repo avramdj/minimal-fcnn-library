@@ -48,12 +48,17 @@ int main(){
 
     //creating linear fully connected model
     model::Net model;
+
     model.add_layer(inSize);
+    model.add_layer(16);
+    model.add_layer(64);
+    model.add_layer(64);
     model.add_layer(32);
-    model.add_layer(128);
     model.add_layer(outSize);
 
-    model.fit(*trainDataIn, *trainDataOut, 20);
+    model.compile(0.05);
+
+    model.fit(*trainDataIn, *trainDataOut, 30);
 
     model.evaluate(*testDataIn, *testDataOut);
 

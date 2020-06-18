@@ -11,9 +11,13 @@ model::Net::Net(){
     srand(time(NULL));
 };
 
-double util::tanhDerivative(double x){
+double util::activationDerivative(double x){
     double sech = 1.0 / std::cosh(x);
     return sech * sech;
+}
+
+double util::activation(double x){
+    return tanh(x);
 }
 
 model::array softMaxArr(model::array& arr){
@@ -45,6 +49,15 @@ void model::Net::forward(model::array& inVals){
     inLayer->set(inVals);
     for(int i = 1; i < layers.size(); i++){
         layers[i]->feed(layers[i-1]);
+    }
+}
+
+/* 
+@params: float trainRate (0 - 1.0) 
+ */
+void model::Net::compile(float trainRate){
+    for(Layer* layer : layers){
+        layer->compile(trainRate);
     }
 }
 
@@ -93,16 +106,7 @@ void model::Net::evaluate(std::vector<model::array> input_data, std::vector<mode
         forward(input_data[i]);
         model::array result = getResult();
         model::array target = output_data[i];
-/*             std::cout << "Predicted: ";
-        for(auto& el : result){
-            std::cout << el << " ";
-        }
-        std::cout << std::endl;
-        std::cout << "Target: ";
-        for(auto& el : target){
-            std::cout << el << " ";
-        }
-        std::cout << std::endl;  */
+
         double error = 0.0;
         for(int i = 0; i < outLayer->getSize(); i++){
             double dlt = target[i] - outLayer->neurons[i]->getVal();
@@ -159,21 +163,21 @@ void model::Net::Layer::feed(Layer* prev){
         for(int i = 0; i < prev->neurons.size(); i++){
             out += prev->neurons[i]->getVal() * neuron->getWeight(i);
         }
-        out = tanh(out);
+        out = util::activation(out);
         neuron->setOut(out);
     }
 }
 
 void model::Net::Layer::calcGradient(Layer* next){
     for(int i = 0; i < neurons.size(); i++){
-        double grad = next->sumContrib(i) * util::tanhDerivative(neurons[i]->getVal());
+        double grad = next->sumContrib(i) * util::activationDerivative(neurons[i]->getVal());
         neurons[i]->setGradient(grad);
     }
 }
 
 void model::Net::Layer::calcGradientTarget(model::array& target){
     for(int i = 0; i < neurons.size(); i++){
-        double grad = (target[i] - neurons[i]->getVal()) * util::tanhDerivative(neurons[i]->getVal());
+        double grad = (target[i] - neurons[i]->getVal()) * util::activationDerivative(neurons[i]->getVal());
         neurons[i]->setGradient(grad);
     }
 }
@@ -190,6 +194,12 @@ model::array model::Net::Layer::toArray(){
         result[i] = neurons[i]->getVal();
     }
     return result;
+}
+
+void model::Net::Layer::compile(float trainRate){
+    for(Neuron* neuron : neurons){
+        neuron->setTrainRate(trainRate);
+    }
 }
 
 model::Net::Layer::Neuron::Neuron(double v, int inSize){
@@ -232,9 +242,13 @@ double model::Net::Layer::sumContrib(int neuronIndex){
 void model::Net::Layer::Neuron::updateWeights(Layer* prev){
     for(int i = 0; i < inputWeights.size(); i++){
         double oldDelta = inputDeltas[i];
-        inputDeltas[i] = train_rate * prev->neurons[i]->getVal() * gradient + momentum * oldDelta;
+        inputDeltas[i] = trainRate * prev->neurons[i]->getVal() * gradient + momentum * oldDelta;
         inputWeights[i] += inputDeltas[i];
     }
+}
+
+void model::Net::Layer::Neuron::setTrainRate(float trainRate){
+    this->trainRate = trainRate;
 }
 
 /* 

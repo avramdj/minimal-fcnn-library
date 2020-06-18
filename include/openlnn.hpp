@@ -5,8 +5,8 @@
 #include <cmath>
 
 namespace model {
-    //array flatten();
     typedef std::vector<double> array;
+    //array flatten();
     
     class Net {
     private:
@@ -25,6 +25,7 @@ namespace model {
         array predict(array& in);
         array getResult();
         void evaluate(std::vector<array> input_data, std::vector<array> output_data);
+        void compile(float trainRate);
     };
 
     class Net::Layer {
@@ -42,14 +43,15 @@ namespace model {
         array toArray();
         double sumContrib(int neuronIndex);
         void updateWeights(Layer* prevLayer);
+        void compile(float trainRate);
     };
 
     class Net::Layer::Neuron{
     private:
         double value;
         double gradient = 0;
-        double momentum = 0.5;
-        double train_rate = 0.1;
+        double momentum = 0.15;
+        double trainRate = 0.1;
     public:
         array inputWeights;
         array inputDeltas;
@@ -60,11 +62,13 @@ namespace model {
         void setGradient(double g);
         double getGradient();
         void updateWeights(Layer* prev);
+        void setTrainRate(float trainRate);
     };
 }
 
 namespace util{
-    double tanhDerivative(double x);
+    double activationDerivative(double x);
+    double activation(double x);
     model::array softMaxArr(model::array& arr);
     int softMax(model::array& arr);
 }

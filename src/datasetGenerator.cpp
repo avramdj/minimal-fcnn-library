@@ -13,8 +13,11 @@ int main(){
         int c = rand() > (RAND_MAX / 2);
         int d = rand() > (RAND_MAX / 2);
         int e = rand() > (RAND_MAX / 2);
-        int res = a ^ b ^ c ^ d ^ e;
-        file << "in " << a << " " << b << " " << c << " " << d << " " << e << std::endl;
+        int f = rand() > (RAND_MAX / 2);
+        int g = rand() > (RAND_MAX / 2);
+        int res = a ^ b ^ c ^ d ^ e ^ f ^ g;
+        file << "in " << a << " " << b << " " << c << " " << d << " " << e
+        << " " << f << " " << g << std::endl;
         file << "out " << res << std::endl;
     }
     file.close();
