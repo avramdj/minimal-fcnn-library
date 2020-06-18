@@ -51,12 +51,12 @@ int main(){
 
     model.add_layer(inSize);
     model.add_layer(16);
-    model.add_layer(64);
+    model.add_layer(32);
     model.add_layer(64);
     model.add_layer(32);
     model.add_layer(outSize);
 
-    model.compile(0.05);
+    model.compile(0.1);
 
     model.fit(*trainDataIn, *trainDataOut, 30);
 

@@ -17,6 +17,7 @@ namespace model {
         Layer* outLayer;
         double recent_error = 0;
         double error_smooth = 100;
+        float trainRate = 0.1;
     public:
         Net();
         void add_layer(int size);
@@ -42,8 +43,7 @@ namespace model {
         void calcGradient(Layer* nextLayer);
         array toArray();
         double sumContrib(int neuronIndex);
-        void updateWeights(Layer* prevLayer);
-        void compile(float trainRate);
+        void updateWeights(Layer* prevLayer, float trainRate);
     };
 
     class Net::Layer::Neuron{
@@ -51,7 +51,6 @@ namespace model {
         double value;
         double gradient = 0;
         double momentum = 0.15;
-        double trainRate = 0.1;
     public:
         array inputWeights;
         array inputDeltas;
@@ -61,8 +60,7 @@ namespace model {
         double getWeight(int i);
         void setGradient(double g);
         double getGradient();
-        void updateWeights(Layer* prev);
-        void setTrainRate(float trainRate);
+        void updateWeights(Layer* prev, float trainRate);
     };
 }
 

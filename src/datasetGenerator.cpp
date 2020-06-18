@@ -7,18 +7,23 @@ int main(){
     std::ofstream file;
     file.open("randomXOR.txt");
     srand(time(NULL));
-    for(int i = 0; i < 2000; i++){
-        int a = rand() > (RAND_MAX / 2);
-        int b = rand() > (RAND_MAX / 2);
-        int c = rand() > (RAND_MAX / 2);
-        int d = rand() > (RAND_MAX / 2);
-        int e = rand() > (RAND_MAX / 2);
-        int f = rand() > (RAND_MAX / 2);
-        int g = rand() > (RAND_MAX / 2);
-        int res = a ^ b ^ c ^ d ^ e ^ f ^ g;
-        file << "in " << a << " " << b << " " << c << " " << d << " " << e
-        << " " << f << " " << g << std::endl;
-        file << "out " << res << std::endl;
+    for(int i = 0; i < 4000; i++){
+        int a = rand()%4;
+        int b = rand()%4;
+        int c = rand()%4;
+        int d = rand()%4;
+        int res = a ^ b ^ c ^ d;
+        file << "in ";
+        file << (a & 1) << " ";
+        file << (a & (2 << 1)) << " ";
+        file << (b & 1) << " ";
+        file << (b & (2 << 1)) << " ";
+        file << (c & 1) << " ";
+        file << (c & (2 << 1)) << " ";
+        file << (d & 1) << " ";
+        file << (d & (2 << 1)) << " ";
+        file << std::endl;
+        file << "out " << (res & 1) << " " << (res & (2 << 1)) << std::endl;
     }
     file.close();
 

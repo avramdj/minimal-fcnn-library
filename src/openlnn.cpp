@@ -56,9 +56,7 @@ void model::Net::forward(model::array& inVals){
 @params: float trainRate (0 - 1.0) 
  */
 void model::Net::compile(float trainRate){
-    for(Layer* layer : layers){
-        layer->compile(trainRate);
-    }
+    this->trainRate = trainRate;
 }
 
 void model::Net::Layer::set(model::array& inVals){
@@ -130,7 +128,7 @@ void model::Net::backpropagate(model::array target){
     for(int i = layers.size() - 1; i > 0; i--){
         Layer* currLayer = layers[i];
         Layer* prevLayer = layers[i-1];
-        currLayer->updateWeights(prevLayer);
+        currLayer->updateWeights(prevLayer, trainRate);
     }
 }
 
@@ -182,9 +180,9 @@ void model::Net::Layer::calcGradientTarget(model::array& target){
     }
 }
 
-void model::Net::Layer::updateWeights(Layer* prevLayer){
+void model::Net::Layer::updateWeights(Layer* prevLayer, float trainRate){
     for(Neuron* neuron : neurons){
-        neuron->updateWeights(prevLayer);
+        neuron->updateWeights(prevLayer, trainRate);
     }
 }
 
@@ -194,12 +192,6 @@ model::array model::Net::Layer::toArray(){
         result[i] = neurons[i]->getVal();
     }
     return result;
-}
-
-void model::Net::Layer::compile(float trainRate){
-    for(Neuron* neuron : neurons){
-        neuron->setTrainRate(trainRate);
-    }
 }
 
 model::Net::Layer::Neuron::Neuron(double v, int inSize){
@@ -239,16 +231,12 @@ double model::Net::Layer::sumContrib(int neuronIndex){
     return sum;
 }
 
-void model::Net::Layer::Neuron::updateWeights(Layer* prev){
+void model::Net::Layer::Neuron::updateWeights(Layer* prev, float trainRate){
     for(int i = 0; i < inputWeights.size(); i++){
         double oldDelta = inputDeltas[i];
         inputDeltas[i] = trainRate * prev->neurons[i]->getVal() * gradient + momentum * oldDelta;
         inputWeights[i] += inputDeltas[i];
     }
-}
-
-void model::Net::Layer::Neuron::setTrainRate(float trainRate){
-    this->trainRate = trainRate;
 }
 
 /* 
