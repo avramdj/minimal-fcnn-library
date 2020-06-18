@@ -1,4 +1,4 @@
-#include "../include/openlnn.hpp"
+#include "../include/libfcnn.hpp"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -46,7 +46,7 @@ int main(){
     int inSize = inData[0].size();
     int outSize = outData[0].size();
 
-    //creating linear fully connected model
+    //creating sequential fully connected model
     model::Net model;
 
     model.add_layer(inSize);

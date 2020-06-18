@@ -1,5 +1,5 @@
-#ifndef LIN_NN_LIB_HPP
-#define LIN_NN_LIB_HPP
+#ifndef FC_NN_LIB_HPP
+#define FC_NN_LIB_HPP
 
 #include <vector>
 #include <cmath>

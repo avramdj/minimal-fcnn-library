@@ -8,22 +8,18 @@ int main(){
     file.open("randomXOR.txt");
     srand(time(NULL));
     for(int i = 0; i < 4000; i++){
-        int a = rand()%4;
-        int b = rand()%4;
-        int c = rand()%4;
-        int d = rand()%4;
+        int a = rand()%2;
+        int b = rand()%2;
+        int c = rand()%2;
+        int d = rand()%2;
         int res = a ^ b ^ c ^ d;
         file << "in ";
-        file << (a & 1) << " ";
-        file << (a & (2 << 1)) << " ";
-        file << (b & 1) << " ";
-        file << (b & (2 << 1)) << " ";
-        file << (c & 1) << " ";
-        file << (c & (2 << 1)) << " ";
-        file << (d & 1) << " ";
-        file << (d & (2 << 1)) << " ";
+        file << (a ) << " ";
+        file << (b ) << " ";
+        file << (c ) << " ";
+        file << (d ) << " ";
         file << std::endl;
-        file << "out " << (res & 1) << " " << (res & (2 << 1)) << std::endl;
+        file << "out " << (res)<< std::endl;
     }
     file.close();
 

@@ -1,4 +1,4 @@
-#include "../include/openlnn.hpp"
+#include "../include/libfcnn.hpp"
 #include <stdexcept>
 #include <iostream>
 #include <cmath>
