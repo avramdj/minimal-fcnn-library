@@ -53,7 +53,7 @@ int main(){
     model.add_layer(128);
     model.add_layer(outSize);
 
-    model.fit(*trainDataIn, *trainDataOut, 50);
+    model.fit(*trainDataIn, *trainDataOut, 20);
 
     model.evaluate(*testDataIn, *testDataOut);
 
