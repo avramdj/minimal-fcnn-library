@@ -2,4 +2,4 @@
 A minimal fully connected neural network library from scratch in C++.
 
 
-<img src="img/ss.png" width="800px">
+<img src="img/ss1.png" width="800px">
