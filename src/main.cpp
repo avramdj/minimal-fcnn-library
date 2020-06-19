@@ -49,13 +49,14 @@ int main(){
     model::Net model;
 
     model.add_layer(inSize);
-    model.add_layer(8);
     model.add_layer(16);
-    model.add_layer(8);
+    model.add_layer(32);
+    model.add_layer(32);
+    model.add_layer(16);
     model.add_layer(outSize);
 
-    float trainRate = 0.2;
-    float batchSize = 16;
+    float trainRate = 0.1;
+    float batchSize = 32;
     model.compile(trainRate, batchSize);
 
     model.fit(*trainDataIn, *trainDataOut, 50);
