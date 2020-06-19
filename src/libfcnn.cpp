@@ -53,10 +53,11 @@ void model::Net::forward(model::array& inVals){
 }
 
 /* 
-@params: float trainRate (0 - 1.0) 
+@params: float trainRate (0 - 1.0), int batchSize
  */
-void model::Net::compile(float trainRate){
+void model::Net::compile(float trainRate, int batchSize){
     this->trainRate = trainRate;
+    this->batchSize = batchSize;
 }
 
 void model::Net::Layer::set(model::array& inVals){
@@ -83,15 +84,17 @@ void model::Net::fit(std::vector<model::array> input_data, std::vector<model::ar
 
             double error = 0.0;
             for(int i = 0; i < outLayer->getSize(); i++){
-                double dlt = target[i] - outLayer->neurons[i]->getVal();
-                error += dlt * dlt;
+                double dlt = pow(target[i] - outLayer->neurons[i]->getVal(), 2);
+                error += dlt;
             }
             error /= outLayer->getSize();
-            error = sqrt(error);
-            backpropagate(target);
+            //error = sqrt(error);
+            if(i%batchSize == 0){
+                backpropagate(target);
+            }
             recent_error = (recent_error * error_smooth + error) / (error_smooth + 1.0);
         }
-        std::cout << " -- Error " << recent_error << std::endl;
+        std::cout << " -- loss " << recent_error << std::endl;
     }
     std::cout << std::endl;
 }
@@ -107,11 +110,11 @@ void model::Net::evaluate(std::vector<model::array> input_data, std::vector<mode
 
         double error = 0.0;
         for(int i = 0; i < outLayer->getSize(); i++){
-            double dlt = target[i] - outLayer->neurons[i]->getVal();
-            error += dlt * dlt;
+            double dlt = pow(target[i] - outLayer->neurons[i]->getVal(), 2);
+            error += dlt;
         }
         error /= outLayer->getSize();
-        error = sqrt(error);
+        //error = sqrt(error);
         recent_error = (recent_error * error_smooth + error) / (error_smooth + 1.0);
     }
     std::cout << "Train evaluation error: " << recent_error << std::endl;

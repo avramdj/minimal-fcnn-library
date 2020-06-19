@@ -18,6 +18,7 @@ namespace model {
         double recent_error = 0;
         double error_smooth = 100;
         float trainRate = 0.1;
+        int batchSize = 1;
     public:
         Net();
         void add_layer(int size);
@@ -26,7 +27,7 @@ namespace model {
         array predict(array& in);
         array getResult();
         void evaluate(std::vector<array> input_data, std::vector<array> output_data);
-        void compile(float trainRate);
+        void compile(float trainRate, int batchSize);
     };
 
     class Net::Layer {
