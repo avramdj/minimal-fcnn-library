@@ -6,29 +6,33 @@
 #include <algorithm>
 #include <iomanip>
 #include <time.h>
+#include <numeric>
 
 model::Net::Net(){
     srand(time(NULL));
 };
 
-double util::activationDerivative(double x){
+double model::activationDerivative(double x){
     double sech = 1.0 / std::cosh(x);
     return sech * sech;
 }
 
-double util::activation(double x){
+double model::activation(double x){
     return tanh(x);
 }
 
 model::array softMaxArr(model::array& arr){
     model::array sft(arr.size(), 0);
-    auto maxel = std::max_element(arr.begin(), arr.end());
-    int i = maxel - arr.begin();
-    sft[i] = 1;
+    double m = *(std::max_element(arr.begin(), arr.end()));
+    double sum = std::accumulate(arr.begin(), arr.end(), 0);
+    const double scale = m + log(sum);
+    for (int i = 0;  i < arr.size();  i++) {
+        arr[i] = expf(arr[i] - scale);
+    }   
     return sft;
 }
 
-int softMax(model::array& arr){
+int maxIdx(model::array& arr){
     auto maxel = std::max_element(arr.begin(), arr.end());
     return int(maxel - arr.begin());
 }
@@ -69,7 +73,7 @@ void model::Net::Layer::set(model::array& inVals){
     }
 }
 
-void model::Net::fit(std::vector<model::array> input_data, std::vector<model::array> output_data, int num_epochs){
+void model::Net::fit(model::Dataset input_data, model::Dataset output_data, int num_epochs){
     if(input_data.size() != output_data.size()){
         throw std::invalid_argument("Input and output data size must be equal!");
     }
@@ -99,7 +103,7 @@ void model::Net::fit(std::vector<model::array> input_data, std::vector<model::ar
     std::cout << std::endl;
 }
 
-void model::Net::evaluate(std::vector<model::array> input_data, std::vector<model::array> output_data){
+void model::Net::evaluate(model::Dataset input_data, model::Dataset output_data){
     if(input_data.size() != output_data.size()){
         throw std::invalid_argument("Input and output data size must be equal!");
     }
@@ -164,21 +168,21 @@ void model::Net::Layer::feed(Layer* prev){
         for(int i = 0; i < prev->neurons.size(); i++){
             out += prev->neurons[i]->getVal() * neuron->getWeight(i);
         }
-        out = util::activation(out);
+        out = model::activation(out);
         neuron->setOut(out);
     }
 }
 
 void model::Net::Layer::calcGradient(Layer* next){
     for(int i = 0; i < neurons.size(); i++){
-        double grad = next->sumContrib(i) * util::activationDerivative(neurons[i]->getVal());
+        double grad = next->sumContrib(i) * model::activationDerivative(neurons[i]->getVal());
         neurons[i]->setGradient(grad);
     }
 }
 
 void model::Net::Layer::calcGradientTarget(model::array& target){
     for(int i = 0; i < neurons.size(); i++){
-        double grad = (target[i] - neurons[i]->getVal()) * util::activationDerivative(neurons[i]->getVal());
+        double grad = (target[i] - neurons[i]->getVal()) * model::activationDerivative(neurons[i]->getVal());
         neurons[i]->setGradient(grad);
     }
 }
@@ -248,8 +252,8 @@ Splits input and output data into a trainIn, trainOut, testIn, testOut
 Returns: a vector of datasets (of size 4), indices 0, 1, 2, 3 are
 trainIn, trainOut, testIn and testOut respectively
  */
-std::vector<dataset::Dataset> dataset::split(dataset::Dataset& inData, 
-                                            dataset::Dataset& outData, float ratio){
+std::vector<model::Dataset> model::split(model::Dataset& inData, 
+                                            model::Dataset& outData, float ratio){
         if(ratio < 0 || ratio > 1){
             throw std::invalid_argument("Ratio must be between 0 and 1");
         }

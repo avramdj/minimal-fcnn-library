@@ -6,6 +6,7 @@
 
 namespace model {
     typedef std::vector<double> array;
+    typedef std::vector<array> Dataset;
     //array flatten();
     
     class Net {
@@ -63,17 +64,11 @@ namespace model {
         double getGradient();
         void updateWeights(Layer* prev, float trainRate);
     };
-}
 
-namespace util{
     double activationDerivative(double x);
     double activation(double x);
-    model::array softMaxArr(model::array& arr);
-    int softMax(model::array& arr);
-}
-
-namespace dataset {
-    typedef std::vector<std::vector<double>> Dataset;
+    array softMaxArr(model::array& arr);
+    int maxIdx(model::array& arr);
     std::vector<Dataset> split(Dataset& inData, Dataset& outData, float ratio);
 }
 

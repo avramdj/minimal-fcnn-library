@@ -33,9 +33,9 @@ int main(){
         }
     }
 
-    std::vector<dataset::Dataset> splitData = dataset::split(inData, outData, 0.8);
+    std::vector<model::Dataset> splitData = model::split(inData, outData, 0.8);
 
-    std::vector<std::vector<double>> *trainDataIn, *trainDataOut, *testDataIn, *testDataOut;
+    model::Dataset *trainDataIn, *trainDataOut, *testDataIn, *testDataOut;
 
     trainDataIn = &splitData[0];
     trainDataOut = &splitData[1];
@@ -59,7 +59,7 @@ int main(){
     float batchSize = 32;
     model.compile(trainRate, batchSize);
 
-    model.fit(*trainDataIn, *trainDataOut, 50);
+    model.fit(*trainDataIn, *trainDataOut, 25);
 
     model.evaluate(*testDataIn, *testDataOut);
 
