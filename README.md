@@ -19,7 +19,7 @@ float train_rate = 0.1;
 float batch_size = 32;
 model.compile(train_rate, batch_size);
 
-model.fit(*train_data_in, *train_data_out, 25);
+model.fit(*train_data_in, *train_data_out, 20);
 
 model.evaluate(*train_data_in, *train_data_out);
 ```
