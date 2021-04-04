@@ -17,7 +17,7 @@ void print_input(std::vector<int>& in, std::ofstream& file, bool isInput){
     file << str << std::endl;
 }
 
-#define N       4
+#define N       5
 #define SIZE    25000
 
 int main(){
