@@ -23,7 +23,7 @@ void print_input(std::vector<int>& in, std::ofstream& file, bool isInput){
 int main(){
 
     std::ofstream file;
-    file.open("randomXOR.txt");
+    file.open("dataset.txt");
     srand(time(NULL));
     for(int i = 0; i < SIZE; i++){
         std::vector<int> input;

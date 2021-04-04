@@ -1,4 +1,4 @@
-#include "../include/libfcnn.hpp"
+#include <include/libfcnn.hpp>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -8,7 +8,7 @@
 int main(){
 
     //loading dataset
-    std::ifstream file("randomXOR.txt");
+    std::ifstream file("dataset.txt");
     std::string str;
     std::vector<std::vector<double>> inData; 
     std::vector<std::vector<double>> outData; 
